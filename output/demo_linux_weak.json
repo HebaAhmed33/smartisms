@@ -1,0 +1,358 @@
+{
+  "smartisms_version": "1.0.0",
+  "timestamp": "2026-02-24T17:25:06.519935",
+  "config_file": "linux_sshd_weak.conf",
+  "config_hash": "4d269e1f8b5937b92043e7e5a373d39b26cab0c11ca6e25e25d581a3b7994c02",
+  "vendor": "linux",
+  "vendor_confidence": 1.0,
+  "standards_evaluated": [
+    "CIS",
+    "HIPAA",
+    "ISO27001",
+    "PCI-DSS"
+  ],
+  "compliance_score": {
+    "percentage": 9.63,
+    "raw_score": 26,
+    "max_score": 270,
+    "risk_level": "Critical Risk",
+    "total_rules": 13,
+    "passed": 0,
+    "warned": 0,
+    "failed": 13,
+    "errored": 0
+  },
+  "per_standard": {
+    "CIS": {
+      "percentage": 17.33,
+      "risk_level": "Critical Risk",
+      "total": 8,
+      "passed": 0,
+      "warned": 0,
+      "failed": 8
+    },
+    "HIPAA": {
+      "percentage": 0.0,
+      "risk_level": "Critical Risk",
+      "total": 2,
+      "passed": 0,
+      "warned": 0,
+      "failed": 2
+    },
+    "ISO27001": {
+      "percentage": 0.0,
+      "risk_level": "Critical Risk",
+      "total": 2,
+      "passed": 0,
+      "warned": 0,
+      "failed": 2
+    },
+    "PCI-DSS": {
+      "percentage": 0.0,
+      "risk_level": "Critical Risk",
+      "total": 1,
+      "passed": 0,
+      "warned": 0,
+      "failed": 1
+    }
+  },
+  "severity_distribution": {
+    "high": 9,
+    "medium": 3,
+    "low": 1
+  },
+  "results": [
+    {
+      "rule_id": "CIS-LINUX-001",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.1",
+      "title": "Ensure SSH Protocol is set to 2",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "2",
+      "reason": "Expected equals '2', found 'yes'",
+      "remediation_text": "Set SSH protocol to version 2 only.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nProtocol 2",
+      "cross_standard_refs": [
+        "ISO27001-A.9.4.2",
+        "PCI-DSS-2.2.2",
+        "HIPAA-164.312(a)(2)(iv)"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-002",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.8",
+      "title": "Ensure PermitRootLogin is disabled",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable root login via SSH. Use sudo for privilege escalation.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nPermitRootLogin no",
+      "cross_standard_refs": [
+        "ISO27001-A.9.2.3",
+        "PCI-DSS-8.1.1",
+        "HIPAA-164.312(a)(1)"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-003",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.4",
+      "title": "Ensure SSH MaxAuthTries is set to 4 or less",
+      "vendor": "linux",
+      "category": "authentication",
+      "severity": "medium",
+      "weight": 3,
+      "status": "FAIL",
+      "penalty": -3,
+      "weighted_penalty": 9,
+      "found_value": "10",
+      "expected_value": "4",
+      "reason": "Expected lte '4', found '10'",
+      "remediation_text": "Limit SSH authentication attempts.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nMaxAuthTries 4",
+      "cross_standard_refs": [
+        "ISO27001-A.9.4.2",
+        "PCI-DSS-8.1.6"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-004",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.5",
+      "title": "Ensure SSH PermitEmptyPasswords is disabled",
+      "vendor": "linux",
+      "category": "authentication",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable empty password authentication.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nPermitEmptyPasswords no",
+      "cross_standard_refs": [
+        "ISO27001-A.9.4.3",
+        "PCI-DSS-8.2.1",
+        "HIPAA-164.312(d)"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-005",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.11",
+      "title": "Ensure only strong ciphers are used",
+      "vendor": "linux",
+      "category": "encryption",
+      "severity": "high",
+      "weight": 4,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 20,
+      "found_value": null,
+      "expected_value": null,
+      "reason": "Key 'Ciphers' not found in configuration",
+      "remediation_text": "Configure strong ciphers only.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nCiphers aes256-ctr,aes192-ctr,aes128-ctr",
+      "cross_standard_refs": [
+        "ISO27001-A.10.1.1",
+        "PCI-DSS-4.1"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-006",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.13",
+      "title": "Ensure SSH LoginGraceTime is set to 60 seconds or less",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "medium",
+      "weight": 3,
+      "status": "FAIL",
+      "penalty": -3,
+      "weighted_penalty": 9,
+      "found_value": "120",
+      "expected_value": "60",
+      "reason": "Expected lte '60', found '120'",
+      "remediation_text": "Set SSH login grace time to 60 seconds or less.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nLoginGraceTime 60",
+      "cross_standard_refs": [
+        "ISO27001-A.9.4.2"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-007",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.6",
+      "title": "Ensure X11Forwarding is disabled",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "low",
+      "weight": 2,
+      "status": "FAIL",
+      "penalty": -1,
+      "weighted_penalty": 2,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable X11 forwarding.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nX11Forwarding no",
+      "cross_standard_refs": [
+        "ISO27001-A.13.1.1"
+      ]
+    },
+    {
+      "rule_id": "CIS-LINUX-008",
+      "standard": "CIS",
+      "control_id": "CIS.5.2.16",
+      "title": "Ensure SSH LogLevel is set to INFO or VERBOSE",
+      "vendor": "linux",
+      "category": "logging",
+      "severity": "medium",
+      "weight": 3,
+      "status": "FAIL",
+      "penalty": -3,
+      "weighted_penalty": 9,
+      "found_value": "QUIET",
+      "expected_value": "^(INFO|VERBOSE)$",
+      "reason": "Expected regex '^(INFO|VERBOSE)$', found 'QUIET'",
+      "remediation_text": "Set SSH log level to INFO or VERBOSE.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nLogLevel INFO",
+      "cross_standard_refs": [
+        "ISO27001-A.12.4.1",
+        "PCI-DSS-10.2",
+        "HIPAA-164.312(b)"
+      ]
+    },
+    {
+      "rule_id": "HIPAA-LINUX-001",
+      "standard": "HIPAA",
+      "control_id": "164.312(a)(1)",
+      "title": "Access control \u2014 Disable root SSH login",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable root login per HIPAA access control requirements.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nPermitRootLogin no",
+      "cross_standard_refs": [
+        "ISO27001-A.9.2.3",
+        "PCI-DSS-8.1.1",
+        "CIS-5.2.8"
+      ]
+    },
+    {
+      "rule_id": "HIPAA-LINUX-002",
+      "standard": "HIPAA",
+      "control_id": "164.312(d)",
+      "title": "Person or entity authentication \u2014 No empty passwords",
+      "vendor": "linux",
+      "category": "authentication",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable empty passwords per HIPAA 164.312(d).",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nPermitEmptyPasswords no",
+      "cross_standard_refs": [
+        "ISO27001-A.9.4.3",
+        "PCI-DSS-8.2.1",
+        "CIS-5.2.5"
+      ]
+    },
+    {
+      "rule_id": "ISO-LINUX-001",
+      "standard": "ISO27001",
+      "control_id": "A.9.2.3",
+      "title": "Management of privileged access \u2014 Disable root SSH",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable SSH root login per ISO 27001 A.9.2.3.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nPermitRootLogin no",
+      "cross_standard_refs": [
+        "CIS-5.2.8",
+        "PCI-DSS-8.1.1",
+        "HIPAA-164.312(a)(1)"
+      ]
+    },
+    {
+      "rule_id": "ISO-LINUX-002",
+      "standard": "ISO27001",
+      "control_id": "A.10.1.1",
+      "title": "Cryptographic policy \u2014 Strong SSH ciphers",
+      "vendor": "linux",
+      "category": "encryption",
+      "severity": "high",
+      "weight": 4,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 20,
+      "found_value": null,
+      "expected_value": null,
+      "reason": "Key 'Ciphers' not found in configuration",
+      "remediation_text": "Configure strong SSH ciphers per ISO 27001 A.10.1.1.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nCiphers aes256-ctr,aes192-ctr,aes128-ctr",
+      "cross_standard_refs": [
+        "CIS-5.2.11",
+        "PCI-DSS-4.1"
+      ]
+    },
+    {
+      "rule_id": "PCI-LINUX-001",
+      "standard": "PCI-DSS",
+      "control_id": "PCI-8.1.1",
+      "title": "Unique user IDs \u2014 Disable root SSH",
+      "vendor": "linux",
+      "category": "access_control",
+      "severity": "high",
+      "weight": 5,
+      "status": "FAIL",
+      "penalty": -5,
+      "weighted_penalty": 25,
+      "found_value": "yes",
+      "expected_value": "no",
+      "reason": "Expected equals 'no', found 'yes'",
+      "remediation_text": "Disable root SSH per PCI-DSS 8.1.1.",
+      "remediation_command": "# In /etc/ssh/sshd_config:\nPermitRootLogin no",
+      "cross_standard_refs": [
+        "ISO27001-A.9.2.3",
+        "CIS-5.2.8",
+        "HIPAA-164.312(a)(1)"
+      ]
+    }
+  ]
+}

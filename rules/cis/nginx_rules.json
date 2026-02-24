@@ -1,0 +1,148 @@
+[
+    {
+        "rule_id": "CIS-NGINX-001",
+        "standard": "CIS",
+        "control_id": "CIS.2.1.1",
+        "title": "Ensure SSL/TLS is configured",
+        "description": "Nginx must use SSL/TLS to encrypt data in transit.",
+        "vendor": "nginx",
+        "category": "encryption",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "server::ssl_protocols",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure SSL protocols in the server block.",
+        "remediation_command": "ssl_protocols TLSv1.2 TLSv1.3;",
+        "cross_standard_refs": [
+            "ISO27001-A.10.1.1",
+            "PCI-DSS-4.1",
+            "HIPAA-164.312(e)(1)"
+        ]
+    },
+    {
+        "rule_id": "CIS-NGINX-002",
+        "standard": "CIS",
+        "control_id": "CIS.2.1.2",
+        "title": "Ensure server_tokens is off",
+        "description": "Hiding Nginx version information prevents attackers from exploiting known vulnerabilities.",
+        "vendor": "nginx",
+        "category": "information_disclosure",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "http::server_tokens",
+            "operator": "equals",
+            "expected_value": "off"
+        },
+        "remediation_text": "Disable server tokens to hide version information.",
+        "remediation_command": "server_tokens off;",
+        "cross_standard_refs": [
+            "ISO27001-A.12.6.1",
+            "PCI-DSS-6.5.5"
+        ]
+    },
+    {
+        "rule_id": "CIS-NGINX-003",
+        "standard": "CIS",
+        "control_id": "CIS.2.1.3",
+        "title": "Ensure X-Frame-Options header is set",
+        "description": "X-Frame-Options prevents clickjacking attacks by controlling page framing.",
+        "vendor": "nginx",
+        "category": "web_security",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "server::add_header X-Frame-Options",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Add X-Frame-Options header to prevent clickjacking.",
+        "remediation_command": "add_header X-Frame-Options \"SAMEORIGIN\" always;",
+        "cross_standard_refs": [
+            "ISO27001-A.14.1.2",
+            "PCI-DSS-6.5.9"
+        ]
+    },
+    {
+        "rule_id": "CIS-NGINX-004",
+        "standard": "CIS",
+        "control_id": "CIS.2.1.4",
+        "title": "Ensure X-Content-Type-Options header is set",
+        "description": "Prevents MIME-type sniffing which can lead to security vulnerabilities.",
+        "vendor": "nginx",
+        "category": "web_security",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "server::add_header X-Content-Type-Options",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Add X-Content-Type-Options header to prevent MIME sniffing.",
+        "remediation_command": "add_header X-Content-Type-Options \"nosniff\" always;",
+        "cross_standard_refs": [
+            "ISO27001-A.14.1.2",
+            "PCI-DSS-6.5.9"
+        ]
+    },
+    {
+        "rule_id": "CIS-NGINX-005",
+        "standard": "CIS",
+        "control_id": "CIS.2.2.1",
+        "title": "Ensure access logging is enabled",
+        "description": "Access logs are critical for security monitoring and incident response.",
+        "vendor": "nginx",
+        "category": "logging",
+        "severity": "high",
+        "weight": 4,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "http::access_log",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Enable access logging in the http block.",
+        "remediation_command": "access_log /var/log/nginx/access.log combined;",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2",
+            "HIPAA-164.312(b)"
+        ]
+    },
+    {
+        "rule_id": "CIS-NGINX-006",
+        "standard": "CIS",
+        "control_id": "CIS.2.2.2",
+        "title": "Ensure error logging is enabled",
+        "description": "Error logs capture application errors and potential security issues.",
+        "vendor": "nginx",
+        "category": "logging",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "error_log",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure error logging with appropriate log level.",
+        "remediation_command": "error_log /var/log/nginx/error.log warn;",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2"
+        ]
+    }
+]

@@ -1,0 +1,122 @@
+[
+    {
+        "rule_id": "CIS-JUNOS-001",
+        "standard": "CIS",
+        "control_id": "CIS.4.1.1",
+        "title": "Ensure SSH protocol version 2 is configured",
+        "description": "JunOS SSH must use protocol version 2 only.",
+        "vendor": "junos",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "system.services.ssh.protocol-version",
+            "operator": "equals",
+            "expected_value": "v2"
+        },
+        "remediation_text": "Set SSH to protocol version 2.",
+        "remediation_command": "set system services ssh protocol-version v2",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.2",
+            "PCI-DSS-2.2.2"
+        ]
+    },
+    {
+        "rule_id": "CIS-JUNOS-002",
+        "standard": "CIS",
+        "control_id": "CIS.4.1.2",
+        "title": "Ensure root login class is restricted",
+        "description": "Root login must be restricted to console-only or disabled.",
+        "vendor": "junos",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "system.root-authentication",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure root authentication with a strong encrypted password.",
+        "remediation_command": "set system root-authentication encrypted-password \"<hashed_password>\"",
+        "cross_standard_refs": [
+            "ISO27001-A.9.2.3",
+            "PCI-DSS-8.1.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-JUNOS-003",
+        "standard": "CIS",
+        "control_id": "CIS.4.2.1",
+        "title": "Ensure syslog is configured",
+        "description": "JunOS must send logs to a syslog host for security monitoring.",
+        "vendor": "junos",
+        "category": "logging",
+        "severity": "high",
+        "weight": 4,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "system.syslog.host",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure syslog to a remote host.",
+        "remediation_command": "set system syslog host 10.0.0.100 any info",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2",
+            "HIPAA-164.312(b)"
+        ]
+    },
+    {
+        "rule_id": "CIS-JUNOS-004",
+        "standard": "CIS",
+        "control_id": "CIS.4.2.2",
+        "title": "Ensure NTP is configured",
+        "description": "NTP must be configured for accurate time synchronization.",
+        "vendor": "junos",
+        "category": "logging",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "system.ntp.server",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure NTP server for clock synchronization.",
+        "remediation_command": "set system ntp server 10.0.0.1",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.4",
+            "PCI-DSS-10.4"
+        ]
+    },
+    {
+        "rule_id": "CIS-JUNOS-005",
+        "standard": "CIS",
+        "control_id": "CIS.4.3.1",
+        "title": "Ensure login banner is configured",
+        "description": "A login message warns unauthorized users about legal consequences.",
+        "vendor": "junos",
+        "category": "access_control",
+        "severity": "low",
+        "weight": 2,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "system.login.message",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure a login banner message.",
+        "remediation_command": "set system login message \"Authorized Access Only. All activity is monitored.\"",
+        "cross_standard_refs": [
+            "ISO27001-A.9.1.1"
+        ]
+    }
+]

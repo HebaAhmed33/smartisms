@@ -1,0 +1,146 @@
+[
+    {
+        "rule_id": "CIS-APACHE-001",
+        "standard": "CIS",
+        "control_id": "CIS.3.1.1",
+        "title": "Ensure ServerTokens is set to Prod",
+        "description": "ServerTokens Prod hides Apache version information from HTTP headers.",
+        "vendor": "apache",
+        "category": "information_disclosure",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "ServerTokens",
+            "operator": "equals",
+            "expected_value": "Prod"
+        },
+        "remediation_text": "Set ServerTokens to Prod to hide version information.",
+        "remediation_command": "ServerTokens Prod",
+        "cross_standard_refs": [
+            "ISO27001-A.12.6.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-APACHE-002",
+        "standard": "CIS",
+        "control_id": "CIS.3.1.2",
+        "title": "Ensure ServerSignature is Off",
+        "description": "ServerSignature Off prevents Apache from showing version on error pages.",
+        "vendor": "apache",
+        "category": "information_disclosure",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "ServerSignature",
+            "operator": "equals",
+            "expected_value": "Off"
+        },
+        "remediation_text": "Disable server signature on error pages.",
+        "remediation_command": "ServerSignature Off",
+        "cross_standard_refs": [
+            "ISO27001-A.12.6.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-APACHE-003",
+        "standard": "CIS",
+        "control_id": "CIS.3.2.1",
+        "title": "Ensure TraceEnable is Off",
+        "description": "HTTP TRACE method can be exploited for cross-site tracing attacks.",
+        "vendor": "apache",
+        "category": "web_security",
+        "severity": "high",
+        "weight": 4,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "TraceEnable",
+            "operator": "equals",
+            "expected_value": "Off"
+        },
+        "remediation_text": "Disable the HTTP TRACE method.",
+        "remediation_command": "TraceEnable Off",
+        "cross_standard_refs": [
+            "ISO27001-A.14.1.2",
+            "PCI-DSS-6.5.9"
+        ]
+    },
+    {
+        "rule_id": "CIS-APACHE-004",
+        "standard": "CIS",
+        "control_id": "CIS.3.2.2",
+        "title": "Ensure SSL/TLS is configured",
+        "description": "Apache must use SSL/TLS for encrypted connections.",
+        "vendor": "apache",
+        "category": "encryption",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "SSLEngine",
+            "operator": "equals",
+            "expected_value": "on"
+        },
+        "remediation_text": "Enable SSL engine for encrypted connections.",
+        "remediation_command": "SSLEngine on\nSSLCertificateFile /path/to/cert.pem\nSSLCertificateKeyFile /path/to/key.pem",
+        "cross_standard_refs": [
+            "ISO27001-A.10.1.1",
+            "PCI-DSS-4.1",
+            "HIPAA-164.312(e)(1)"
+        ]
+    },
+    {
+        "rule_id": "CIS-APACHE-005",
+        "standard": "CIS",
+        "control_id": "CIS.3.3.1",
+        "title": "Ensure error logging is configured",
+        "description": "Error logging must be enabled for security monitoring.",
+        "vendor": "apache",
+        "category": "logging",
+        "severity": "high",
+        "weight": 4,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "ErrorLog",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure error logging.",
+        "remediation_command": "ErrorLog /var/log/apache2/error.log",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2",
+            "HIPAA-164.312(b)"
+        ]
+    },
+    {
+        "rule_id": "CIS-APACHE-006",
+        "standard": "CIS",
+        "control_id": "CIS.3.3.2",
+        "title": "Ensure custom access logging is configured",
+        "description": "Access logs record all HTTP requests for audit and forensics.",
+        "vendor": "apache",
+        "category": "logging",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "CustomLog",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure access logging with combined log format.",
+        "remediation_command": "CustomLog /var/log/apache2/access.log combined",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2"
+        ]
+    }
+]

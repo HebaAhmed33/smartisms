@@ -1,0 +1,212 @@
+[
+  {
+    "rule_id": "CIS-CISCO-001",
+    "standard": "CIS",
+    "control_id": "CIS.1.1.1",
+    "title": "Ensure SSH version 2 is enabled",
+    "description": "SSH version 1 has known cryptographic weaknesses. Only SSHv2 must be used.",
+    "vendor": "cisco",
+    "category": "access_control",
+    "severity": "high",
+    "weight": 5,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "ip ssh version",
+      "operator": "equals",
+      "expected_value": "2"
+    },
+    "remediation_text": "Enable SSH version 2 to prevent cryptographic attacks inherent in SSHv1.",
+    "remediation_command": "ip ssh version 2",
+    "cross_standard_refs": ["ISO27001-A.9.4.2", "PCI-DSS-2.2.2", "HIPAA-164.312(a)(2)(iv)"]
+  },
+  {
+    "rule_id": "CIS-CISCO-002",
+    "standard": "CIS",
+    "control_id": "CIS.1.1.2",
+    "title": "Ensure password encryption service is enabled",
+    "description": "The service password-encryption command encrypts plaintext passwords in the config.",
+    "vendor": "cisco",
+    "category": "authentication",
+    "severity": "high",
+    "weight": 5,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "service password-encryption",
+      "operator": "equals",
+      "expected_value": "true"
+    },
+    "remediation_text": "Enable password encryption to protect credentials stored in configuration.",
+    "remediation_command": "service password-encryption",
+    "cross_standard_refs": ["ISO27001-A.10.1.1", "PCI-DSS-8.2.1"]
+  },
+  {
+    "rule_id": "CIS-CISCO-003",
+    "standard": "CIS",
+    "control_id": "CIS.1.1.3",
+    "title": "Ensure enable secret is configured",
+    "description": "The enable secret command uses MD5 hashing and must be used instead of enable password.",
+    "vendor": "cisco",
+    "category": "authentication",
+    "severity": "high",
+    "weight": 5,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "enable secret",
+      "operator": "exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Configure an enable secret with a strong password.",
+    "remediation_command": "enable secret 0 <STRONG_PASSWORD>",
+    "cross_standard_refs": ["ISO27001-A.9.2.4", "PCI-DSS-8.2.3"]
+  },
+  {
+    "rule_id": "CIS-CISCO-004",
+    "standard": "CIS",
+    "control_id": "CIS.1.2.1",
+    "title": "Ensure HTTP server is disabled",
+    "description": "The HTTP server provides an insecure web management interface and should be disabled.",
+    "vendor": "cisco",
+    "category": "access_control",
+    "severity": "high",
+    "weight": 4,
+    "condition": {
+      "type": "negation",
+      "scope": "global",
+      "key": "ip http server",
+      "operator": "not_exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Disable the HTTP server to prevent unencrypted management access.",
+    "remediation_command": "no ip http server",
+    "cross_standard_refs": ["ISO27001-A.13.1.1", "PCI-DSS-2.2.2"]
+  },
+  {
+    "rule_id": "CIS-CISCO-005",
+    "standard": "CIS",
+    "control_id": "CIS.1.2.2",
+    "title": "Ensure HTTPS server uses TLS 1.2 or higher",
+    "description": "If HTTPS is enabled, it must use TLS 1.2 or newer for secure management.",
+    "vendor": "cisco",
+    "category": "encryption",
+    "severity": "high",
+    "weight": 4,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "ip http secure-server",
+      "operator": "equals",
+      "expected_value": "true"
+    },
+    "remediation_text": "Enable the HTTPS secure server for encrypted management access.",
+    "remediation_command": "ip http secure-server",
+    "cross_standard_refs": ["ISO27001-A.10.1.1", "PCI-DSS-4.1"]
+  },
+  {
+    "rule_id": "CIS-CISCO-006",
+    "standard": "CIS",
+    "control_id": "CIS.1.3.1",
+    "title": "Ensure logging is enabled",
+    "description": "Logging must be enabled to record security events for audit and forensic purposes.",
+    "vendor": "cisco",
+    "category": "logging",
+    "severity": "high",
+    "weight": 4,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "logging buffered",
+      "operator": "exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Enable buffered logging at an appropriate level.",
+    "remediation_command": "logging buffered 64000 informational",
+    "cross_standard_refs": ["ISO27001-A.12.4.1", "PCI-DSS-10.2", "HIPAA-164.312(b)"]
+  },
+  {
+    "rule_id": "CIS-CISCO-007",
+    "standard": "CIS",
+    "control_id": "CIS.1.3.2",
+    "title": "Ensure timestamps are enabled for logging",
+    "description": "Timestamps provide essential correlation data for security event investigation.",
+    "vendor": "cisco",
+    "category": "logging",
+    "severity": "medium",
+    "weight": 3,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "service timestamps log",
+      "operator": "exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Enable logging timestamps for event correlation.",
+    "remediation_command": "service timestamps log datetime msec localtime show-timezone",
+    "cross_standard_refs": ["ISO27001-A.12.4.1", "PCI-DSS-10.4"]
+  },
+  {
+    "rule_id": "CIS-CISCO-008",
+    "standard": "CIS",
+    "control_id": "CIS.1.4.1",
+    "title": "Ensure NTP server is configured",
+    "description": "NTP ensures accurate time synchronization crucial for log correlation.",
+    "vendor": "cisco",
+    "category": "logging",
+    "severity": "medium",
+    "weight": 3,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "ntp server",
+      "operator": "exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Configure NTP server for accurate time synchronization.",
+    "remediation_command": "ntp server 10.0.0.1",
+    "cross_standard_refs": ["ISO27001-A.12.4.4", "PCI-DSS-10.4"]
+  },
+  {
+    "rule_id": "CIS-CISCO-009",
+    "standard": "CIS",
+    "control_id": "CIS.1.5.1",
+    "title": "Ensure SNMP community strings are not default",
+    "description": "Default SNMP community strings (public/private) must be changed or SNMP disabled.",
+    "vendor": "cisco",
+    "category": "access_control",
+    "severity": "high",
+    "weight": 5,
+    "condition": {
+      "type": "negation",
+      "scope": "global",
+      "key": "snmp-server community public",
+      "operator": "not_exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Remove default SNMP community strings and use SNMPv3 with authentication.",
+    "remediation_command": "no snmp-server community public\nno snmp-server community private\nsnmp-server group v3group v3 auth",
+    "cross_standard_refs": ["ISO27001-A.9.4.3", "PCI-DSS-2.1"]
+  },
+  {
+    "rule_id": "CIS-CISCO-010",
+    "standard": "CIS",
+    "control_id": "CIS.1.6.1",
+    "title": "Ensure login banner is configured",
+    "description": "A login banner warns unauthorized users and may be legally required.",
+    "vendor": "cisco",
+    "category": "access_control",
+    "severity": "low",
+    "weight": 2,
+    "condition": {
+      "type": "key_value_match",
+      "scope": "global",
+      "key": "banner motd",
+      "operator": "exists",
+      "expected_value": ""
+    },
+    "remediation_text": "Configure a login banner with appropriate unauthorized access warning.",
+    "remediation_command": "banner motd # Authorized Access Only. All activity is monitored. #",
+    "cross_standard_refs": ["ISO27001-A.9.1.1"]
+  }
+]

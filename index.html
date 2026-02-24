@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartISMS — Intelligent Information Security Management System. Rule-based compliance auditing for ISO 27001, PCI-DSS, HIPAA, CIS.">
+    <title>SmartISMS — Intelligent Security Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+<div class="app-container">
+
+    <!-- Header -->
+    <header class="app-header">
+        <h1 class="app-logo"><span class="shield">🛡️</span>SmartISMS</h1>
+        <p class="app-subtitle">Intelligent Information Security Management System</p>
+    </header>
+
+    <!-- Step Progress Indicators -->
+    <nav class="step-progress" aria-label="Assessment Steps">
+        <div class="step-indicator active" data-step="1"><div class="step-number">1</div><div class="step-label">Setup</div></div>
+        <div class="step-connector"></div>
+        <div class="step-indicator disabled" data-step="2"><div class="step-number">2</div><div class="step-label">Standards</div></div>
+        <div class="step-connector"></div>
+        <div class="step-indicator disabled" data-step="3"><div class="step-number">3</div><div class="step-label">Upload</div></div>
+        <div class="step-connector"></div>
+        <div class="step-indicator disabled" data-step="4"><div class="step-number">4</div><div class="step-label">Processing</div></div>
+        <div class="step-connector"></div>
+        <div class="step-indicator disabled" data-step="5"><div class="step-number">5</div><div class="step-label">Dashboard</div></div>
+        <div class="step-connector"></div>
+        <div class="step-indicator disabled" data-step="6"><div class="step-number">6</div><div class="step-label">Risk</div></div>
+        <div class="step-connector"></div>
+        <div class="step-indicator disabled" data-step="7"><div class="step-number">7</div><div class="step-label">Export</div></div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container"><div class="progress-bar-fill" id="progress-fill"></div></div>
+
+    <!-- ═══════ STEP 1: Organization Setup ═══════ -->
+    <section class="step-panel active" id="step-1">
+        <div class="glass-card">
+            <div class="card-title"><span class="icon">🏢</span>Organization Setup</div>
+            <p class="card-description">Configure your organization details and risk appetite for this security assessment.</p>
+            <form id="org-form">
+                <div class="form-group">
+                    <label class="form-label" for="assessment-name">Assessment Name</label>
+                    <input class="form-input" type="text" id="assessment-name" placeholder="e.g. Q1 2026 Security Assessment" required>
+                </div>
+                <div class="two-col">
+                    <div class="form-group">
+                        <label class="form-label" for="org-type">Organization Type</label>
+                        <select class="form-select" id="org-type" required>
+                            <option value="">Select type...</option>
+                            <option value="Banking">Banking / Financial</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Government">Government</option>
+                            <option value="Enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="risk-appetite">Risk Appetite</label>
+                        <select class="form-select" id="risk-appetite" required>
+                            <option value="">Select appetite...</option>
+                            <option value="Low">Low — Minimal risk tolerance</option>
+                            <option value="Medium">Medium — Balanced approach</option>
+                            <option value="High">High — Aggressive tolerance</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="step1-error" class="error-message"></div>
+                <div class="btn-group"><button type="submit" class="btn btn-primary" data-next>Continue →</button></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ═══════ STEP 2: Standard Selection ═══════ -->
+    <section class="step-panel" id="step-2">
+        <div class="glass-card">
+            <div class="card-title"><span class="icon">📋</span>Select Compliance Standards</div>
+            <p class="card-description">Choose one or more security standards to evaluate your configuration files against.</p>
+            <div class="standards-grid">
+                <label class="standard-option" id="opt-iso">
+                    <input type="checkbox" class="standard-checkbox" value="ISO 27001">
+                    <span class="std-icon">🌐</span>
+                    <span class="std-name">ISO/IEC 27001</span>
+                    <span class="std-desc">International information security management standard</span>
+                    <span class="std-check"></span>
+                </label>
+                <label class="standard-option" id="opt-pci">
+                    <input type="checkbox" class="standard-checkbox" value="PCI-DSS">
+                    <span class="std-icon">💳</span>
+                    <span class="std-name">PCI-DSS</span>
+                    <span class="std-desc">Payment Card Industry Data Security Standard</span>
+                    <span class="std-check"></span>
+                </label>
+                <label class="standard-option" id="opt-hipaa">
+                    <input type="checkbox" class="standard-checkbox" value="HIPAA">
+                    <span class="std-icon">🏥</span>
+                    <span class="std-name">HIPAA</span>
+                    <span class="std-desc">Health Insurance Portability and Accountability Act</span>
+                    <span class="std-check"></span>
+                </label>
+                <label class="standard-option" id="opt-cis">
+                    <input type="checkbox" class="standard-checkbox" value="CIS">
+                    <span class="std-icon">🔒</span>
+                    <span class="std-name">CIS Benchmarks</span>
+                    <span class="std-desc">Center for Internet Security configuration benchmarks</span>
+                    <span class="std-check"></span>
+                </label>
+            </div>
+            <div id="step2-error" class="error-message"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" data-prev>← Back</button>
+                <button class="btn btn-primary" data-next>Continue →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ STEP 3: File Upload ═══════ -->
+    <section class="step-panel" id="step-3">
+        <div class="glass-card">
+            <div class="card-title"><span class="icon">📁</span>Upload Configuration Files</div>
+            <p class="card-description">Upload your configuration files (.conf, .cfg, .txt) for analysis. The system will auto-detect the platform.</p>
+            <div class="dropzone" id="dropzone">
+                <span class="upload-icon">📤</span>
+                <div class="upload-text">Drag & drop files here, or click to browse</div>
+                <div class="upload-hint">Accepted: .conf, .cfg, .txt — Max 5 MB per file</div>
+            </div>
+            <input type="file" id="file-input" multiple accept=".conf,.cfg,.txt" style="display:none">
+            <div class="file-list" id="file-list"></div>
+            <div id="step3-error" class="error-message"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" data-prev>← Back</button>
+                <button class="btn btn-primary" data-next>Analyze →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ STEP 4: Processing ═══════ -->
+    <section class="step-panel" id="step-4">
+        <div class="glass-card">
+            <div class="processing-container">
+                <div class="processing-spinner"></div>
+                <div class="processing-status" id="processing-status">Initializing analysis engine...</div>
+                <div class="processing-bar"><div class="processing-bar-fill" id="processing-progress"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ STEP 5: Results Dashboard ═══════ -->
+    <section class="step-panel" id="step-5">
+        <!-- Compliance Score -->
+        <div class="glass-card" style="margin-bottom:20px">
+            <div class="score-display">
+                <div class="score-value" id="compliance-score">—</div>
+                <div><span class="risk-label" id="risk-level-label">—</span></div>
+            </div>
+        </div>
+
+        <!-- Summary Metrics -->
+        <div class="dashboard-grid">
+            <div class="metric-card"><div class="metric-value" id="total-rules">0</div><div class="metric-label">Rules Evaluated</div></div>
+            <div class="metric-card"><div class="metric-value" style="color:var(--success)" id="passed-rules">0</div><div class="metric-label">Passed</div></div>
+            <div class="metric-card"><div class="metric-value" style="color:var(--danger)" id="failed-rules">0</div><div class="metric-label">Failed</div></div>
+            <div class="metric-card"><div class="metric-value" style="color:var(--warning)" id="warning-rules">0</div><div class="metric-label">Warnings</div></div>
+        </div>
+
+        <!-- Executive Summary -->
+        <div class="glass-card" style="margin-bottom:20px">
+            <div class="section-title"><span class="icon">📝</span>Executive Summary</div>
+            <div class="exec-summary" id="exec-summary" style="margin-top:12px">—</div>
+        </div>
+
+        <div class="two-col">
+            <!-- Standards Breakdown -->
+            <div class="glass-card">
+                <div class="section-title"><span class="icon">📊</span>Compliance by Standard</div>
+                <div id="standards-breakdown" style="margin-top:12px"></div>
+            </div>
+            <!-- Severity Distribution -->
+            <div class="glass-card">
+                <div class="section-title"><span class="icon">⚖️</span>Severity Distribution</div>
+                <div id="severity-chart" style="margin-top:12px"></div>
+                <!-- Risk Summary -->
+                <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-glass)">
+                    <div class="section-title" style="margin-top:0"><span class="icon">⚠️</span>Risk Summary</div>
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(4,1fr); margin-top:10px">
+                        <div style="text-align:center"><div style="font-size:22px;font-weight:800" id="total-risks">0</div><div style="font-size:10px;color:var(--text-muted)">TOTAL</div></div>
+                        <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--danger)" id="high-risks">0</div><div style="font-size:10px;color:var(--text-muted)">HIGH</div></div>
+                        <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--warning)" id="medium-risks">0</div><div style="font-size:10px;color:var(--text-muted)">MEDIUM</div></div>
+                        <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--success)" id="low-risks">0</div><div style="font-size:10px;color:var(--text-muted)">LOW</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Failed Controls -->
+        <div class="glass-card" style="margin-top:20px">
+            <div class="section-title"><span class="icon">❌</span>Failed Controls</div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Rule ID</th><th>Control</th><th>Standard</th><th>Description</th><th>Severity</th><th>Remediation</th></tr></thead>
+                    <tbody id="failed-controls-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="glass-card" style="margin-top:20px">
+            <div class="section-title"><span class="icon">💡</span>Security Recommendations</div>
+            <div id="recommendations-list" style="margin-top:12px"></div>
+        </div>
+
+        <div class="btn-group" style="margin-top:20px">
+            <button class="btn btn-primary" data-next>View Risk Details →</button>
+        </div>
+    </section>
+
+    <!-- ═══════ STEP 6: Risk Details ═══════ -->
+    <section class="step-panel" id="step-6">
+        <!-- Risk Register -->
+        <div class="glass-card" style="margin-bottom:20px">
+            <div class="card-title"><span class="icon">📋</span>Risk Register</div>
+            <p class="card-description">Comprehensive register of all identified security risks with impact and likelihood scoring.</p>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Risk ID</th><th>Control</th><th>Standard</th><th>Description</th><th>Severity</th><th>Impact</th><th>Likelihood</th><th>Score</th><th>Level</th><th>Status</th></tr></thead>
+                    <tbody id="risk-register-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Treatment Plan -->
+        <div class="glass-card" style="margin-bottom:20px">
+            <div class="card-title"><span class="icon">🛠️</span>Risk Treatment Plan</div>
+            <div class="treatment-summary">
+                <div class="treatment-stat"><div class="stat-value" style="color:var(--warning)" id="treatment-count">0</div><div class="stat-label">Require Treatment</div></div>
+                <div class="treatment-stat"><div class="stat-value" style="color:var(--info)" id="accepted-count">0</div><div class="stat-label">Accepted Risks</div></div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Risk ID</th><th>Description</th><th>Strategy</th><th>Priority</th><th>Timeframe</th><th>Responsible</th><th>Status</th></tr></thead>
+                    <tbody id="treatment-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-secondary" data-prev>← Dashboard</button>
+            <button class="btn btn-primary" data-next>Export Report →</button>
+        </div>
+    </section>
+
+    <!-- ═══════ STEP 7: Export ═══════ -->
+    <section class="step-panel" id="step-7">
+        <div class="glass-card">
+            <div class="card-title"><span class="icon">📥</span>Export Assessment Report</div>
+            <p class="card-description">Download your complete security assessment report in your preferred format.</p>
+            <div class="export-options">
+                <div class="export-card" id="export-html">
+                    <span class="export-icon">🌐</span>
+                    <div class="export-label">Export as HTML</div>
+                    <div class="export-desc">Self-contained HTML report. Opens in any browser. Best for sharing.</div>
+                </div>
+                <div class="export-card" id="export-pdf">
+                    <span class="export-icon">📄</span>
+                    <div class="export-label">Export as PDF</div>
+                    <div class="export-desc">Print-optimized format via browser print dialog. Best for formal records.</div>
+                </div>
+            </div>
+            <div class="btn-group" style="margin-top:30px">
+                <button class="btn btn-secondary" data-prev>← Risk Details</button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+[
+    {
+        "rule_id": "PCI-CISCO-001",
+        "standard": "PCI-DSS",
+        "control_id": "PCI-2.2.2",
+        "title": "Enable only necessary services — Disable HTTP",
+        "description": "PCI-DSS 2.2.2 requires disabling unnecessary services. HTTP management is insecure.",
+        "vendor": "cisco",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "negation",
+            "scope": "global",
+            "key": "ip http server",
+            "operator": "not_exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Disable HTTP server per PCI-DSS 2.2.2.",
+        "remediation_command": "no ip http server",
+        "cross_standard_refs": [
+            "ISO27001-A.13.1.1",
+            "CIS-1.2.1"
+        ]
+    },
+    {
+        "rule_id": "PCI-CISCO-002",
+        "standard": "PCI-DSS",
+        "control_id": "PCI-2.1",
+        "title": "Change vendor defaults — Remove default SNMP strings",
+        "description": "PCI-DSS 2.1 requires changing all vendor-supplied defaults.",
+        "vendor": "cisco",
+        "category": "authentication",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "negation",
+            "scope": "global",
+            "key": "snmp-server community public",
+            "operator": "not_exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Remove default SNMP community strings per PCI-DSS 2.1.",
+        "remediation_command": "no snmp-server community public\nno snmp-server community private",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.3",
+            "CIS-1.5.1"
+        ]
+    },
+    {
+        "rule_id": "PCI-CISCO-003",
+        "standard": "PCI-DSS",
+        "control_id": "PCI-4.1",
+        "title": "Encrypt data in transit — SSH version 2",
+        "description": "PCI-DSS 4.1 requires strong cryptography for transmission of cardholder data.",
+        "vendor": "cisco",
+        "category": "encryption",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "ip ssh version",
+            "operator": "equals",
+            "expected_value": "2"
+        },
+        "remediation_text": "Enable SSH version 2 per PCI-DSS 4.1.",
+        "remediation_command": "ip ssh version 2",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.2",
+            "CIS-1.1.1"
+        ]
+    },
+    {
+        "rule_id": "PCI-CISCO-004",
+        "standard": "PCI-DSS",
+        "control_id": "PCI-8.2.1",
+        "title": "Render passwords unreadable — Encryption enabled",
+        "description": "PCI-DSS 8.2.1 requires rendering all passwords unreadable during storage.",
+        "vendor": "cisco",
+        "category": "authentication",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "service password-encryption",
+            "operator": "equals",
+            "expected_value": "true"
+        },
+        "remediation_text": "Enable password encryption per PCI-DSS 8.2.1.",
+        "remediation_command": "service password-encryption",
+        "cross_standard_refs": [
+            "ISO27001-A.10.1.1",
+            "CIS-1.1.2"
+        ]
+    },
+    {
+        "rule_id": "PCI-CISCO-005",
+        "standard": "PCI-DSS",
+        "control_id": "PCI-10.2",
+        "title": "Implement audit trails — Logging enabled",
+        "description": "PCI-DSS 10.2 requires audit trails to track all access to cardholder data.",
+        "vendor": "cisco",
+        "category": "logging",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "logging buffered",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Enable logging per PCI-DSS 10.2.",
+        "remediation_command": "logging buffered 64000 informational",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "CIS-1.3.1",
+            "HIPAA-164.312(b)"
+        ]
+    }
+]

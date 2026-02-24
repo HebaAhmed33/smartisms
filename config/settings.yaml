@@ -1,0 +1,65 @@
+# SmartISMS Global Settings
+app:
+  name: "SmartISMS"
+  version: "1.0.0"
+  description: "Intelligent Information Security Management System"
+
+paths:
+  rules_dir: "rules"
+  datasets_dir: "datasets"
+  output_dir: "output"
+  templates_dir: "templates"
+
+scoring:
+  penalty_matrix:
+    fail_high: -5
+    fail_medium: -3
+    fail_low: -1
+    warning_high: -3
+    warning_medium: -2
+    warning_low: -1
+    pass_high: 0
+    pass_medium: 0
+    pass_low: 0
+
+  risk_levels:
+    low:
+      min: 90
+      max: 100
+      label: "Low Risk"
+      color: "#28a745"
+    medium:
+      min: 70
+      max: 89
+      label: "Medium Risk"
+      color: "#ffc107"
+    high:
+      min: 50
+      max: 69
+      label: "High Risk"
+      color: "#fd7e14"
+    critical:
+      min: 0
+      max: 49
+      label: "Critical Risk"
+      color: "#dc3545"
+
+supported_vendors:
+  - cisco
+  - junos
+  - nginx
+  - apache
+  - linux
+  - firewall
+
+supported_standards:
+  - ISO27001
+  - PCI-DSS
+  - HIPAA
+  - CIS
+
+report:
+  default_format: "html"
+  include_appendix: true
+  include_cross_mapping: true
+  company_name: "SmartISMS Security Assessment"

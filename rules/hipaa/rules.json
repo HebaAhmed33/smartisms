@@ -1,0 +1,126 @@
+[
+    {
+        "rule_id": "HIPAA-CISCO-001",
+        "standard": "HIPAA",
+        "control_id": "164.312(a)(1)",
+        "title": "Access control — Restrict root/enable access",
+        "description": "HIPAA 164.312(a)(1) requires access controls. Enable secret must be configured.",
+        "vendor": "cisco",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "enable secret",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure enable secret per HIPAA 164.312(a)(1).",
+        "remediation_command": "enable secret 0 <STRONG_PASSWORD>",
+        "cross_standard_refs": [
+            "ISO27001-A.9.2.4",
+            "CIS-1.1.3"
+        ]
+    },
+    {
+        "rule_id": "HIPAA-CISCO-002",
+        "standard": "HIPAA",
+        "control_id": "164.312(a)(2)(iv)",
+        "title": "Encryption — SSH version 2 for ePHI transmission",
+        "description": "HIPAA 164.312(a)(2)(iv) requires encryption of ePHI. SSH v2 must be used.",
+        "vendor": "cisco",
+        "category": "encryption",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "ip ssh version",
+            "operator": "equals",
+            "expected_value": "2"
+        },
+        "remediation_text": "Enable SSH version 2 per HIPAA encryption requirements.",
+        "remediation_command": "ip ssh version 2",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.2",
+            "PCI-DSS-4.1",
+            "CIS-1.1.1"
+        ]
+    },
+    {
+        "rule_id": "HIPAA-CISCO-003",
+        "standard": "HIPAA",
+        "control_id": "164.312(b)",
+        "title": "Audit controls — Logging enabled",
+        "description": "HIPAA 164.312(b) requires audit controls to record ePHI access.",
+        "vendor": "cisco",
+        "category": "logging",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "logging buffered",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Enable logging per HIPAA 164.312(b) audit requirements.",
+        "remediation_command": "logging buffered 64000 informational",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2",
+            "CIS-1.3.1"
+        ]
+    },
+    {
+        "rule_id": "HIPAA-LINUX-001",
+        "standard": "HIPAA",
+        "control_id": "164.312(a)(1)",
+        "title": "Access control — Disable root SSH login",
+        "description": "HIPAA 164.312(a)(1) requires unique user identification. Disable root SSH login.",
+        "vendor": "linux",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "PermitRootLogin",
+            "operator": "equals",
+            "expected_value": "no"
+        },
+        "remediation_text": "Disable root login per HIPAA access control requirements.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nPermitRootLogin no",
+        "cross_standard_refs": [
+            "ISO27001-A.9.2.3",
+            "PCI-DSS-8.1.1",
+            "CIS-5.2.8"
+        ]
+    },
+    {
+        "rule_id": "HIPAA-LINUX-002",
+        "standard": "HIPAA",
+        "control_id": "164.312(d)",
+        "title": "Person or entity authentication — No empty passwords",
+        "description": "HIPAA 164.312(d) requires entity authentication. Empty passwords must be forbidden.",
+        "vendor": "linux",
+        "category": "authentication",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "PermitEmptyPasswords",
+            "operator": "equals",
+            "expected_value": "no"
+        },
+        "remediation_text": "Disable empty passwords per HIPAA 164.312(d).",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nPermitEmptyPasswords no",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.3",
+            "PCI-DSS-8.2.1",
+            "CIS-5.2.5"
+        ]
+    }
+]

@@ -1,0 +1,23 @@
+{
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": [
+                "."
+            ]
+        }
+    ],
+    "include": [
+        "core",
+        "parsers",
+        "tests"
+    ],
+    "extraPaths": [
+        "."
+    ],
+    "pythonVersion": "3.10",
+    "reportMissingImports": "none",
+    "reportMissingModuleSource": "none",
+    "venvPath": "",
+    "typeCheckingMode": "basic"
+}

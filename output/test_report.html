@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartISMS Compliance Report</title>
+    <style>
+        :root {
+            --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+            --text: #e2e8f0; --text-muted: #94a3b8; --border: #475569;
+            --pass: #22c55e; --warn: #eab308; --fail: #ef4444;
+            --high: #ef4444; --medium: #f59e0b; --low: #3b82f6;
+            --accent: #6366f1;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { font-size: 1.4rem; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent); color: var(--accent); }
+        h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: var(--text); }
+        .header { background: var(--surface); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--border); }
+        .header-meta { display: flex; gap: 2rem; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem; flex-wrap: wrap; }
+        .score-hero { display: flex; align-items: center; gap: 2rem; margin-top: 1.5rem; }
+        .score-circle { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; border: 4px solid; }
+        .risk-label { font-size: 1.2rem; font-weight: 600; padding: 0.4rem 1rem; border-radius: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .stat-card { background: var(--surface2); border-radius: 8px; padding: 1rem; text-align: center; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; }
+        .stat-card .label { color: var(--text-muted); font-size: 0.85rem; }
+        .card { background: var(--surface); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: var(--surface2); padding: 0.75rem; text-align: left; font-weight: 600; white-space: nowrap; }
+        td { padding: 0.75rem; border-top: 1px solid var(--border); }
+        tr:hover { background: rgba(99, 102, 241, 0.05); }
+        .badge { padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
+        .pass { color: var(--pass); } .warn { color: var(--warn); } .fail { color: var(--fail); }
+        .badge.pass { background: rgba(34,197,94,0.15); } .badge.warn { background: rgba(234,179,8,0.15); } .badge.fail { background: rgba(239,68,68,0.15); }
+        .severity-high { color: var(--high); } .severity-medium { color: var(--medium); } .severity-low { color: var(--low); }
+        .badge.severity-high { background: rgba(239,68,68,0.15); } .badge.severity-medium { background: rgba(245,158,11,0.15); } .badge.severity-low { background: rgba(59,130,246,0.15); }
+        .risk-badge { padding: 0.25rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: #fff; }
+        code { background: var(--surface2); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; }
+        pre { background: var(--surface2); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0; }
+        pre code { background: none; padding: 0; }
+        .bar-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0; }
+        .bar-label { width: 70px; font-weight: 600; font-size: 0.85rem; }
+        .bar-container { flex: 1; height: 24px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+        .bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .severity-high-bg { background: var(--high); } .severity-medium-bg { background: var(--medium); } .severity-low-bg { background: var(--low); }
+        .bar-value { width: 30px; text-align: right; font-weight: 600; font-size: 0.9rem; }
+        .footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+        @media print { body { background: #fff; color: #000; } .card,.header { border: 1px solid #ddd; } th { background: #f3f4f6; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 1. Header & Executive Summary -->
+    <div class="header">
+        <h1>🛡️ SmartISMS Compliance Report</h1>
+        <div class="header-meta">
+            <span>📄 <strong>cisco_secure_router.conf</strong></span>
+            <span>🏷️ Vendor: <strong>CISCO</strong></span>
+            <span>📅 2026-02-24</span>
+            <span>🔒 SHA-256: <code>2cdbf933952fc20e...</code></span>
+            <span>📏 Standards: <strong>CIS, HIPAA, ISO27001, PCI-DSS</strong></span>
+        </div>
+
+        <div class="score-hero">
+            <div class="score-circle" style="border-color:#fd7e14; color:#fd7e14">
+                51.68%
+            </div>
+            <div>
+                <div class="risk-label" style="background:#fd7e14; color:#fff">High Risk</div>
+                <p style="margin-top:0.5rem; color:var(--text-muted)">23 rules evaluated • Score: 261/505</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="value" style="color:var(--pass)">12</div><div class="label">Passed</div></div>
+            <div class="stat-card"><div class="value" style="color:var(--warn)">0</div><div class="label">Warnings</div></div>
+            <div class="stat-card"><div class="value" style="color:var(--fail)">11</div><div class="label">Failed</div></div>
+            <div class="stat-card"><div class="value" style="color:var(--text-muted)">0</div><div class="label">Errors</div></div>
+        </div>
+    </div>
+
+    <!-- 2. Compliance Overview -->
+    <h2>📊 Compliance Overview by Standard</h2>
+    <div class="card">
+        <table>
+            <thead><tr><th>Standard</th><th>Rules</th><th>Pass</th><th>Warn</th><th>Fail</th><th>Score</th><th>Risk</th></tr></thead>
+            <tbody>
+            <tr>
+                <td>CIS</td>
+                <td>10</td>
+                <td class="pass">5</td>
+                <td class="warn">0</td>
+                <td class="fail">5</td>
+                <td><span class="badge" style="background:#fd7e14">50.5%</span></td>
+                <td><span class="risk-badge" style="background:#fd7e14">High Risk</span></td>
+            </tr>
+            <tr>
+                <td>HIPAA</td>
+                <td>3</td>
+                <td class="pass">1</td>
+                <td class="warn">0</td>
+                <td class="fail">2</td>
+                <td><span class="badge" style="background:#dc3545">33.33%</span></td>
+                <td><span class="risk-badge" style="background:#dc3545">Critical Risk</span></td>
+            </tr>
+            <tr>
+                <td>ISO27001</td>
+                <td>5</td>
+                <td class="pass">3</td>
+                <td class="warn">0</td>
+                <td class="fail">2</td>
+                <td><span class="badge" style="background:#fd7e14">57.14%</span></td>
+                <td><span class="risk-badge" style="background:#fd7e14">High Risk</span></td>
+            </tr>
+            <tr>
+                <td>PCI-DSS</td>
+                <td>5</td>
+                <td class="pass">3</td>
+                <td class="warn">0</td>
+                <td class="fail">2</td>
+                <td><span class="badge" style="background:#fd7e14">60.0%</span></td>
+                <td><span class="risk-badge" style="background:#fd7e14">High Risk</span></td>
+            </tr></tbody>
+        </table>
+    </div>
+
+    <!-- 3. Severity Distribution -->
+    <h2>📈 Severity Distribution (Failures & Warnings)</h2>
+    <div class="card">
+        
+            <div class="bar-row">
+                <span class="bar-label">HIGH</span>
+                <div class="bar-container">
+                    <div class="bar severity-high-bg" style="width:100.0%"></div>
+                </div>
+                <span class="bar-value">10</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">MEDIUM</span>
+                <div class="bar-container">
+                    <div class="bar severity-medium-bg" style="width:10.0%"></div>
+                </div>
+                <span class="bar-value">1</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">LOW</span>
+                <div class="bar-container">
+                    <div class="bar severity-low-bg" style="width:0.0%"></div>
+                </div>
+                <span class="bar-value">0</span>
+            </div>
+    </div>
+
+    <!-- 4. Failed Controls -->
+    <h2>❌ Failed & Warning Controls</h2>
+    <div class="card">
+        <table>
+            <thead><tr><th>Rule ID</th><th>Title</th><th>Status</th><th>Severity</th><th>Standard</th><th>Found</th><th>Expected</th></tr></thead>
+            <tbody>
+            <tr class="severity-high">
+                <td><code>CIS-CISCO-002</code></td>
+                <td>Ensure password encryption service is enabled</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>CIS</td>
+                <td><code>N/A</code></td>
+                <td><code>true</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>CIS-CISCO-003</code></td>
+                <td>Ensure enable secret is configured</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>CIS</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>CIS-CISCO-005</code></td>
+                <td>Ensure HTTPS server uses TLS 1.2 or higher</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>CIS</td>
+                <td><code>N/A</code></td>
+                <td><code>true</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>CIS-CISCO-006</code></td>
+                <td>Ensure logging is enabled</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>CIS</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr>
+            <tr class="severity-medium">
+                <td><code>CIS-CISCO-007</code></td>
+                <td>Ensure timestamps are enabled for logging</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-medium">MEDIUM</span></td>
+                <td>CIS</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>HIPAA-CISCO-001</code></td>
+                <td>Access control — Restrict root/enable access</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>HIPAA</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>HIPAA-CISCO-003</code></td>
+                <td>Audit controls — Logging enabled</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>HIPAA</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>ISO-CISCO-002</code></td>
+                <td>Event logging — Syslog enabled</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>ISO27001</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>ISO-CISCO-003</code></td>
+                <td>Cryptographic controls — Password encryption</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>ISO27001</td>
+                <td><code>N/A</code></td>
+                <td><code>true</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>PCI-CISCO-004</code></td>
+                <td>Render passwords unreadable — Encryption enabled</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>PCI-DSS</td>
+                <td><code>N/A</code></td>
+                <td><code>true</code></td>
+            </tr>
+            <tr class="severity-high">
+                <td><code>PCI-CISCO-005</code></td>
+                <td>Implement audit trails — Logging enabled</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>PCI-DSS</td>
+                <td><code>N/A</code></td>
+                <td><code>N/A</code></td>
+            </tr></tbody>
+        </table>
+    </div>
+
+    <!-- 5. Remediation Actions -->
+    <h2>🔧 Remediation Actions</h2>
+    <div class="card">
+        <table>
+            <thead><tr><th>Rule ID</th><th>Severity</th><th>Remediation</th><th>Command</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><code>CIS-CISCO-002</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable password encryption to protect credentials stored in configuration.</td>
+                <td><pre><code>service password-encryption</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-003</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Configure an enable secret with a strong password.</td>
+                <td><pre><code>enable secret 0 <STRONG_PASSWORD></code></pre></td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-005</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable the HTTPS secure server for encrypted management access.</td>
+                <td><pre><code>ip http secure-server</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-006</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable buffered logging at an appropriate level.</td>
+                <td><pre><code>logging buffered 64000 informational</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-007</code></td>
+                <td><span class="badge severity-medium">MEDIUM</span></td>
+                <td>Enable logging timestamps for event correlation.</td>
+                <td><pre><code>service timestamps log datetime msec localtime show-timezone</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>HIPAA-CISCO-001</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Configure enable secret per HIPAA 164.312(a)(1).</td>
+                <td><pre><code>enable secret 0 <STRONG_PASSWORD></code></pre></td>
+            </tr>
+            <tr>
+                <td><code>HIPAA-CISCO-003</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable logging per HIPAA 164.312(b) audit requirements.</td>
+                <td><pre><code>logging buffered 64000 informational</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-002</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable logging per ISO 27001 A.12.4.1.</td>
+                <td><pre><code>logging buffered 64000 informational</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-003</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable password encryption per ISO 27001 A.10.1.1.</td>
+                <td><pre><code>service password-encryption</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-004</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable password encryption per PCI-DSS 8.2.1.</td>
+                <td><pre><code>service password-encryption</code></pre></td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-005</code></td>
+                <td><span class="badge severity-high">HIGH</span></td>
+                <td>Enable logging per PCI-DSS 10.2.</td>
+                <td><pre><code>logging buffered 64000 informational</code></pre></td>
+            </tr></tbody>
+        </table>
+    </div>
+
+    <!-- 6. Cross-Standard Mapping -->
+    <h2>🔗 Cross-Standard Mapping</h2>
+    <div class="card">
+        <table>
+            <thead><tr><th>Canonical Control</th><th>Description</th><th>Standard</th><th>Control ID</th><th>Section</th></tr></thead>
+            <tbody>  # pyre-ignore
+                    <tr>
+                        <td>enforce_sshv2</td>
+                        <td>Require SSH Protocol Version 2</td>
+                        <td>ISO27001</td>
+                        <td>A.9.4.2</td>
+                        <td>Secure log-on procedures</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enforce_sshv2</td>
+                        <td>Require SSH Protocol Version 2</td>
+                        <td>PCI-DSS</td>
+                        <td>2.2.2</td>
+                        <td>System configuration standards</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enforce_sshv2</td>
+                        <td>Require SSH Protocol Version 2</td>
+                        <td>PCI-DSS</td>
+                        <td>4.1</td>
+                        <td>Encrypt transmission of cardholder data</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enforce_sshv2</td>
+                        <td>Require SSH Protocol Version 2</td>
+                        <td>HIPAA</td>
+                        <td>164.312(a)(2)(iv)</td>
+                        <td>Encryption and decryption</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enforce_sshv2</td>
+                        <td>Require SSH Protocol Version 2</td>
+                        <td>CIS</td>
+                        <td>1.1.1</td>
+                        <td>Management Plane - SSH</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enable_logging</td>
+                        <td>Enable security event logging/audit trails</td>
+                        <td>ISO27001</td>
+                        <td>A.12.4.1</td>
+                        <td>Event logging</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enable_logging</td>
+                        <td>Enable security event logging/audit trails</td>
+                        <td>PCI-DSS</td>
+                        <td>10.2</td>
+                        <td>Implement automated audit trails</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enable_logging</td>
+                        <td>Enable security event logging/audit trails</td>
+                        <td>HIPAA</td>
+                        <td>164.312(b)</td>
+                        <td>Audit controls</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>enable_logging</td>
+                        <td>Enable security event logging/audit trails</td>
+                        <td>CIS</td>
+                        <td>1.3.1</td>
+                        <td>Logging configuration</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>password_encryption</td>
+                        <td>Encrypt stored passwords/credentials</td>
+                        <td>ISO27001</td>
+                        <td>A.10.1.1</td>
+                        <td>Cryptographic controls policy</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>password_encryption</td>
+                        <td>Encrypt stored passwords/credentials</td>
+                        <td>PCI-DSS</td>
+                        <td>8.2.1</td>
+                        <td>Render passwords unreadable during storage</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>password_encryption</td>
+                        <td>Encrypt stored passwords/credentials</td>
+                        <td>CIS</td>
+                        <td>1.1.2</td>
+                        <td>Password encryption service</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_insecure_services</td>
+                        <td>Disable unnecessary and insecure services (HTTP, Telnet)</td>
+                        <td>ISO27001</td>
+                        <td>A.13.1.1</td>
+                        <td>Network controls</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_insecure_services</td>
+                        <td>Disable unnecessary and insecure services (HTTP, Telnet)</td>
+                        <td>PCI-DSS</td>
+                        <td>2.2.2</td>
+                        <td>Enable only necessary services</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_insecure_services</td>
+                        <td>Disable unnecessary and insecure services (HTTP, Telnet)</td>
+                        <td>CIS</td>
+                        <td>1.2.1</td>
+                        <td>Disable HTTP server</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>change_vendor_defaults</td>
+                        <td>Change all vendor-supplied default credentials</td>
+                        <td>ISO27001</td>
+                        <td>A.9.4.3</td>
+                        <td>Password management system</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>change_vendor_defaults</td>
+                        <td>Change all vendor-supplied default credentials</td>
+                        <td>PCI-DSS</td>
+                        <td>2.1</td>
+                        <td>Always change vendor defaults</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>change_vendor_defaults</td>
+                        <td>Change all vendor-supplied default credentials</td>
+                        <td>CIS</td>
+                        <td>1.5.1</td>
+                        <td>SNMP community strings</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_root_login</td>
+                        <td>Disable direct root/admin login via SSH</td>
+                        <td>ISO27001</td>
+                        <td>A.9.2.3</td>
+                        <td>Management of privileged access</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_root_login</td>
+                        <td>Disable direct root/admin login via SSH</td>
+                        <td>PCI-DSS</td>
+                        <td>8.1.1</td>
+                        <td>Assign unique ID to each person</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_root_login</td>
+                        <td>Disable direct root/admin login via SSH</td>
+                        <td>HIPAA</td>
+                        <td>164.312(a)(1)</td>
+                        <td>Access control</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>disable_root_login</td>
+                        <td>Disable direct root/admin login via SSH</td>
+                        <td>CIS</td>
+                        <td>5.2.8</td>
+                        <td>Ensure PermitRootLogin is disabled</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>time_synchronization</td>
+                        <td>Configure NTP for accurate time synchronization</td>
+                        <td>ISO27001</td>
+                        <td>A.12.4.4</td>
+                        <td>Clock synchronization</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>time_synchronization</td>
+                        <td>Configure NTP for accurate time synchronization</td>
+                        <td>PCI-DSS</td>
+                        <td>10.4</td>
+                        <td>Synchronize critical system clocks</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>time_synchronization</td>
+                        <td>Configure NTP for accurate time synchronization</td>
+                        <td>CIS</td>
+                        <td>1.4.1</td>
+                        <td>NTP server configuration</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>encrypt_data_in_transit</td>
+                        <td>Use TLS/SSL to encrypt data in transit</td>
+                        <td>ISO27001</td>
+                        <td>A.10.1.1</td>
+                        <td>Cryptographic controls policy</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>encrypt_data_in_transit</td>
+                        <td>Use TLS/SSL to encrypt data in transit</td>
+                        <td>PCI-DSS</td>
+                        <td>4.1</td>
+                        <td>Use strong cryptography</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>encrypt_data_in_transit</td>
+                        <td>Use TLS/SSL to encrypt data in transit</td>
+                        <td>HIPAA</td>
+                        <td>164.312(e)(1)</td>
+                        <td>Transmission security</td>
+                    </tr>  # pyre-ignore
+                    <tr>
+                        <td>encrypt_data_in_transit</td>
+                        <td>Use TLS/SSL to encrypt data in transit</td>
+                        <td>CIS</td>
+                        <td>2.1.1</td>
+                        <td>SSL/TLS configuration</td>
+                    </tr></tbody>
+        </table>
+    </div>
+
+    <!-- 7. Appendix -->
+    <h2>📋 Appendix: Full Rule Evaluation Log</h2>
+    <div class="card">
+        <table>
+            <thead><tr><th>Rule ID</th><th>Title</th><th>Standard</th><th>Status</th><th>Severity</th><th>Penalty</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><code>CIS-CISCO-001</code></td>
+                <td>Ensure SSH version 2 is enabled</td>
+                <td>CIS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-002</code></td>
+                <td>Ensure password encryption service is enabled</td>
+                <td>CIS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-003</code></td>
+                <td>Ensure enable secret is configured</td>
+                <td>CIS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-004</code></td>
+                <td>Ensure HTTP server is disabled</td>
+                <td>CIS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-005</code></td>
+                <td>Ensure HTTPS server uses TLS 1.2 or higher</td>
+                <td>CIS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-006</code></td>
+                <td>Ensure logging is enabled</td>
+                <td>CIS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-007</code></td>
+                <td>Ensure timestamps are enabled for logging</td>
+                <td>CIS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>MEDIUM</td>
+                <td>-3</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-008</code></td>
+                <td>Ensure NTP server is configured</td>
+                <td>CIS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>MEDIUM</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-009</code></td>
+                <td>Ensure SNMP community strings are not default</td>
+                <td>CIS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>CIS-CISCO-010</code></td>
+                <td>Ensure login banner is configured</td>
+                <td>CIS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>LOW</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>HIPAA-CISCO-001</code></td>
+                <td>Access control — Restrict root/enable access</td>
+                <td>HIPAA</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>HIPAA-CISCO-002</code></td>
+                <td>Encryption — SSH version 2 for ePHI transmission</td>
+                <td>HIPAA</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>HIPAA-CISCO-003</code></td>
+                <td>Audit controls — Logging enabled</td>
+                <td>HIPAA</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-001</code></td>
+                <td>Secure log-on procedures — SSH version 2</td>
+                <td>ISO27001</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-002</code></td>
+                <td>Event logging — Syslog enabled</td>
+                <td>ISO27001</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-003</code></td>
+                <td>Cryptographic controls — Password encryption</td>
+                <td>ISO27001</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-004</code></td>
+                <td>Network controls — Disable insecure management</td>
+                <td>ISO27001</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>ISO-CISCO-005</code></td>
+                <td>Clock synchronization — NTP configured</td>
+                <td>ISO27001</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>MEDIUM</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-001</code></td>
+                <td>Enable only necessary services — Disable HTTP</td>
+                <td>PCI-DSS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-002</code></td>
+                <td>Change vendor defaults — Remove default SNMP strings</td>
+                <td>PCI-DSS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-003</code></td>
+                <td>Encrypt data in transit — SSH version 2</td>
+                <td>PCI-DSS</td>
+                <td><span class="badge pass">PASS</span></td>
+                <td>HIGH</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-004</code></td>
+                <td>Render passwords unreadable — Encryption enabled</td>
+                <td>PCI-DSS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr>
+            <tr>
+                <td><code>PCI-CISCO-005</code></td>
+                <td>Implement audit trails — Logging enabled</td>
+                <td>PCI-DSS</td>
+                <td><span class="badge fail">FAIL</span></td>
+                <td>HIGH</td>
+                <td>-5</td>
+            </tr></tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Generated by SmartISMS v1.0.0 • 2026-02-24T18:57:33.669304 • Deterministic Rule-Based Evaluation Engine</p>
+    </div>
+
+</div>
+</body>
+</html>

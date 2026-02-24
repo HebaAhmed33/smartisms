@@ -1,0 +1,146 @@
+[
+    {
+        "rule_id": "CIS-FW-001",
+        "standard": "CIS",
+        "control_id": "CIS.9.1.1",
+        "title": "Ensure default INPUT policy is DROP",
+        "description": "The default INPUT chain policy must be DROP to deny all inbound traffic not explicitly allowed.",
+        "vendor": "firewall",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "policy::INPUT",
+            "operator": "equals",
+            "expected_value": "DROP"
+        },
+        "remediation_text": "Set default INPUT policy to DROP.",
+        "remediation_command": "iptables -P INPUT DROP",
+        "cross_standard_refs": [
+            "ISO27001-A.13.1.1",
+            "PCI-DSS-1.2.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-FW-002",
+        "standard": "CIS",
+        "control_id": "CIS.9.1.2",
+        "title": "Ensure default FORWARD policy is DROP",
+        "description": "The default FORWARD chain policy must be DROP to prevent unauthorized packet forwarding.",
+        "vendor": "firewall",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "policy::FORWARD",
+            "operator": "equals",
+            "expected_value": "DROP"
+        },
+        "remediation_text": "Set default FORWARD policy to DROP.",
+        "remediation_command": "iptables -P FORWARD DROP",
+        "cross_standard_refs": [
+            "ISO27001-A.13.1.1",
+            "PCI-DSS-1.2.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-FW-003",
+        "standard": "CIS",
+        "control_id": "CIS.9.1.3",
+        "title": "Ensure loopback traffic is accepted",
+        "description": "Local loopback interface must be allowed for proper system operation.",
+        "vendor": "firewall",
+        "category": "network",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "regex_match",
+            "scope": "global",
+            "key": "_raw_content",
+            "operator": "regex",
+            "expected_value": "-A INPUT -i lo -j ACCEPT"
+        },
+        "remediation_text": "Allow loopback traffic on INPUT chain.",
+        "remediation_command": "iptables -A INPUT -i lo -j ACCEPT",
+        "cross_standard_refs": [
+            "CIS-9.1.3"
+        ]
+    },
+    {
+        "rule_id": "CIS-FW-004",
+        "standard": "CIS",
+        "control_id": "CIS.9.2.1",
+        "title": "Ensure firewall rules exist (non-empty ruleset)",
+        "description": "The firewall must have rules defined. An empty ruleset provides no protection.",
+        "vendor": "firewall",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "block_exists",
+            "scope": "global",
+            "key": "rules",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Add firewall rules to protect the system. At minimum, allow SSH and drop all else.",
+        "remediation_command": "iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT\niptables -A INPUT -p tcp --dport 22 -j ACCEPT\niptables -A INPUT -j DROP",
+        "cross_standard_refs": [
+            "ISO27001-A.13.1.1",
+            "PCI-DSS-1.2",
+            "HIPAA-164.312(a)(1)"
+        ]
+    },
+    {
+        "rule_id": "ISO-FW-001",
+        "standard": "ISO27001",
+        "control_id": "A.13.1.1",
+        "title": "Network controls — Default deny policy",
+        "description": "ISO 27001 A.13.1.1 requires network boundary controls. Default deny is mandatory.",
+        "vendor": "firewall",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "policy::INPUT",
+            "operator": "equals",
+            "expected_value": "DROP"
+        },
+        "remediation_text": "Set default deny input policy per ISO 27001 A.13.1.1.",
+        "remediation_command": "iptables -P INPUT DROP",
+        "cross_standard_refs": [
+            "CIS-9.1.1",
+            "PCI-DSS-1.2.1"
+        ]
+    },
+    {
+        "rule_id": "PCI-FW-001",
+        "standard": "PCI-DSS",
+        "control_id": "PCI-1.2.1",
+        "title": "Restrict inbound traffic — Default deny ingress",
+        "description": "PCI-DSS 1.2.1 requires restricting inbound traffic to only what is necessary.",
+        "vendor": "firewall",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "policy::INPUT",
+            "operator": "equals",
+            "expected_value": "DROP"
+        },
+        "remediation_text": "Set default deny input policy per PCI-DSS 1.2.1.",
+        "remediation_command": "iptables -P INPUT DROP",
+        "cross_standard_refs": [
+            "ISO27001-A.13.1.1",
+            "CIS-9.1.1"
+        ]
+    }
+]

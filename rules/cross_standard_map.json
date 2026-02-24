@@ -1,0 +1,203 @@
+[
+    {
+        "mapping_id": "XM-001",
+        "canonical_control": "enforce_sshv2",
+        "description": "Require SSH Protocol Version 2",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.9.4.2",
+                "section": "Secure log-on procedures"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "2.2.2",
+                "section": "System configuration standards"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "4.1",
+                "section": "Encrypt transmission of cardholder data"
+            },
+            {
+                "standard": "HIPAA",
+                "control_id": "164.312(a)(2)(iv)",
+                "section": "Encryption and decryption"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "1.1.1",
+                "section": "Management Plane - SSH"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-002",
+        "canonical_control": "enable_logging",
+        "description": "Enable security event logging/audit trails",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.12.4.1",
+                "section": "Event logging"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "10.2",
+                "section": "Implement automated audit trails"
+            },
+            {
+                "standard": "HIPAA",
+                "control_id": "164.312(b)",
+                "section": "Audit controls"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "1.3.1",
+                "section": "Logging configuration"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-003",
+        "canonical_control": "password_encryption",
+        "description": "Encrypt stored passwords/credentials",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.10.1.1",
+                "section": "Cryptographic controls policy"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "8.2.1",
+                "section": "Render passwords unreadable during storage"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "1.1.2",
+                "section": "Password encryption service"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-004",
+        "canonical_control": "disable_insecure_services",
+        "description": "Disable unnecessary and insecure services (HTTP, Telnet)",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.13.1.1",
+                "section": "Network controls"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "2.2.2",
+                "section": "Enable only necessary services"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "1.2.1",
+                "section": "Disable HTTP server"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-005",
+        "canonical_control": "change_vendor_defaults",
+        "description": "Change all vendor-supplied default credentials",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.9.4.3",
+                "section": "Password management system"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "2.1",
+                "section": "Always change vendor defaults"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "1.5.1",
+                "section": "SNMP community strings"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-006",
+        "canonical_control": "disable_root_login",
+        "description": "Disable direct root/admin login via SSH",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.9.2.3",
+                "section": "Management of privileged access"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "8.1.1",
+                "section": "Assign unique ID to each person"
+            },
+            {
+                "standard": "HIPAA",
+                "control_id": "164.312(a)(1)",
+                "section": "Access control"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "5.2.8",
+                "section": "Ensure PermitRootLogin is disabled"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-007",
+        "canonical_control": "time_synchronization",
+        "description": "Configure NTP for accurate time synchronization",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.12.4.4",
+                "section": "Clock synchronization"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "10.4",
+                "section": "Synchronize critical system clocks"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "1.4.1",
+                "section": "NTP server configuration"
+            }
+        ]
+    },
+    {
+        "mapping_id": "XM-008",
+        "canonical_control": "encrypt_data_in_transit",
+        "description": "Use TLS/SSL to encrypt data in transit",
+        "mappings": [
+            {
+                "standard": "ISO27001",
+                "control_id": "A.10.1.1",
+                "section": "Cryptographic controls policy"
+            },
+            {
+                "standard": "PCI-DSS",
+                "control_id": "4.1",
+                "section": "Use strong cryptography"
+            },
+            {
+                "standard": "HIPAA",
+                "control_id": "164.312(e)(1)",
+                "section": "Transmission security"
+            },
+            {
+                "standard": "CIS",
+                "control_id": "2.1.1",
+                "section": "SSL/TLS configuration"
+            }
+        ]
+    }
+]

@@ -1,0 +1,196 @@
+[
+    {
+        "rule_id": "CIS-LINUX-001",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.1",
+        "title": "Ensure SSH Protocol is set to 2",
+        "description": "SSH Protocol 1 is vulnerable to man-in-the-middle attacks.",
+        "vendor": "linux",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "Protocol",
+            "operator": "equals",
+            "expected_value": "2"
+        },
+        "remediation_text": "Set SSH protocol to version 2 only.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nProtocol 2",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.2",
+            "PCI-DSS-2.2.2",
+            "HIPAA-164.312(a)(2)(iv)"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-002",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.8",
+        "title": "Ensure PermitRootLogin is disabled",
+        "description": "Direct root login over SSH must be disabled to enforce accountability.",
+        "vendor": "linux",
+        "category": "access_control",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "PermitRootLogin",
+            "operator": "equals",
+            "expected_value": "no"
+        },
+        "remediation_text": "Disable root login via SSH. Use sudo for privilege escalation.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nPermitRootLogin no",
+        "cross_standard_refs": [
+            "ISO27001-A.9.2.3",
+            "PCI-DSS-8.1.1",
+            "HIPAA-164.312(a)(1)"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-003",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.4",
+        "title": "Ensure SSH MaxAuthTries is set to 4 or less",
+        "description": "Limiting authentication attempts mitigates brute force attacks.",
+        "vendor": "linux",
+        "category": "authentication",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "MaxAuthTries",
+            "operator": "lte",
+            "expected_value": "4"
+        },
+        "remediation_text": "Limit SSH authentication attempts.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nMaxAuthTries 4",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.2",
+            "PCI-DSS-8.1.6"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-004",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.5",
+        "title": "Ensure SSH PermitEmptyPasswords is disabled",
+        "description": "Empty passwords are a critical security vulnerability.",
+        "vendor": "linux",
+        "category": "authentication",
+        "severity": "high",
+        "weight": 5,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "PermitEmptyPasswords",
+            "operator": "equals",
+            "expected_value": "no"
+        },
+        "remediation_text": "Disable empty password authentication.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nPermitEmptyPasswords no",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.3",
+            "PCI-DSS-8.2.1",
+            "HIPAA-164.312(d)"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-005",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.11",
+        "title": "Ensure only strong ciphers are used",
+        "description": "Weak SSH ciphers must be disabled to prevent cryptographic attacks.",
+        "vendor": "linux",
+        "category": "encryption",
+        "severity": "high",
+        "weight": 4,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "Ciphers",
+            "operator": "exists",
+            "expected_value": ""
+        },
+        "remediation_text": "Configure strong ciphers only.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nCiphers aes256-ctr,aes192-ctr,aes128-ctr",
+        "cross_standard_refs": [
+            "ISO27001-A.10.1.1",
+            "PCI-DSS-4.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-006",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.13",
+        "title": "Ensure SSH LoginGraceTime is set to 60 seconds or less",
+        "description": "Reducing login grace time limits exposure to unauthenticated connections.",
+        "vendor": "linux",
+        "category": "access_control",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "LoginGraceTime",
+            "operator": "lte",
+            "expected_value": "60"
+        },
+        "remediation_text": "Set SSH login grace time to 60 seconds or less.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nLoginGraceTime 60",
+        "cross_standard_refs": [
+            "ISO27001-A.9.4.2"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-007",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.6",
+        "title": "Ensure X11Forwarding is disabled",
+        "description": "X11 forwarding can be exploited and should be disabled on servers.",
+        "vendor": "linux",
+        "category": "access_control",
+        "severity": "low",
+        "weight": 2,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "X11Forwarding",
+            "operator": "equals",
+            "expected_value": "no"
+        },
+        "remediation_text": "Disable X11 forwarding.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nX11Forwarding no",
+        "cross_standard_refs": [
+            "ISO27001-A.13.1.1"
+        ]
+    },
+    {
+        "rule_id": "CIS-LINUX-008",
+        "standard": "CIS",
+        "control_id": "CIS.5.2.16",
+        "title": "Ensure SSH LogLevel is set to INFO or VERBOSE",
+        "description": "Adequate logging level ensures security events are captured.",
+        "vendor": "linux",
+        "category": "logging",
+        "severity": "medium",
+        "weight": 3,
+        "condition": {
+            "type": "key_value_match",
+            "scope": "global",
+            "key": "LogLevel",
+            "operator": "regex",
+            "expected_value": "^(INFO|VERBOSE)$"
+        },
+        "remediation_text": "Set SSH log level to INFO or VERBOSE.",
+        "remediation_command": "# In /etc/ssh/sshd_config:\nLogLevel INFO",
+        "cross_standard_refs": [
+            "ISO27001-A.12.4.1",
+            "PCI-DSS-10.2",
+            "HIPAA-164.312(b)"
+        ]
+    }
+]

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartISMS — Intelligent Compliance Evaluation</title>
+    <meta name="description"
+        content="SmartISMS: Automated security compliance evaluation for network configurations against CIS, ISO27001, PCI-DSS, and HIPAA standards.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🛡️</div>
+                <div>
+                    <h1>SmartISMS</h1>
+                    <p class="tagline">Intelligent Security Compliance Engine</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Step 1: Upload & Configure -->
+        <section id="upload-section" class="card upload-card">
+            <div class="card-header">
+                <span class="step-badge">1</span>
+                <h2>Upload Configuration File</h2>
+            </div>
+
+            <div class="upload-area" id="drop-zone">
+                <div class="upload-icon">📁</div>
+                <p class="upload-title">Drag & drop your config file here</p>
+                <p class="upload-subtitle">or click to browse • Supports .conf, .cfg, .txt, .ini, .yaml</p>
+                <input type="file" id="file-input"
+                    accept=".conf,.cfg,.config,.txt,.ini,.junos,.rules,.htaccess,.xml,.yaml,.yml,.properties" hidden>
+            </div>
+
+            <div id="file-info" class="file-info hidden">
+                <div class="file-icon">📄</div>
+                <div class="file-details">
+                    <span id="file-name" class="file-name"></span>
+                    <span id="file-size" class="file-size"></span>
+                </div>
+                <button id="remove-file" class="btn-remove" title="Remove file">✕</button>
+            </div>
+
+            <div class="card-header" style="margin-top: 2rem;">
+                <span class="step-badge">2</span>
+                <h2>Select Compliance Standards</h2>
+            </div>
+
+            <div class="standards-grid" id="standards-grid">
+                <label class="standard-card">
+                    <input type="checkbox" value="CIS" checked>
+                    <div class="standard-content">
+                        <span class="standard-icon">🏛️</span>
+                        <span class="standard-name">CIS</span>
+                        <span class="standard-desc">Center for Internet Security</span>
+                    </div>
+                </label>
+                <label class="standard-card">
+                    <input type="checkbox" value="ISO27001" checked>
+                    <div class="standard-content">
+                        <span class="standard-icon">🌐</span>
+                        <span class="standard-name">ISO 27001</span>
+                        <span class="standard-desc">Information Security Management</span>
+                    </div>
+                </label>
+                <label class="standard-card">
+                    <input type="checkbox" value="PCI-DSS" checked>
+                    <div class="standard-content">
+                        <span class="standard-icon">💳</span>
+                        <span class="standard-name">PCI-DSS</span>
+                        <span class="standard-desc">Payment Card Industry</span>
+                    </div>
+                </label>
+                <label class="standard-card">
+                    <input type="checkbox" value="HIPAA" checked>
+                    <div class="standard-content">
+                        <span class="standard-icon">🏥</span>
+                        <span class="standard-name">HIPAA</span>
+                        <span class="standard-desc">Health Insurance Portability</span>
+                    </div>
+                </label>
+            </div>
+
+            <button id="evaluate-btn" class="btn-primary" disabled>
+                <span class="btn-text">🔍 Evaluate Compliance</span>
+                <span class="btn-loading hidden">
+                    <span class="spinner"></span> Analyzing...
+                </span>
+            </button>
+        </section>
+
+        <!-- Loading -->
+        <section id="loading-section" class="card hidden">
+            <div class="loading-content">
+                <div class="loading-spinner-large"></div>
+                <h2>Analyzing Configuration...</h2>
+                <p class="loading-steps" id="loading-steps">Detecting vendor and parsing rules...</p>
+            </div>
+        </section>
+
+        <!-- Results Dashboard -->
+        <section id="results-section" class="hidden">
+
+            <!-- Score Overview -->
+            <div class="results-header">
+                <div class="card score-card">
+                    <div class="score-gauge">
+                        <svg viewBox="0 0 200 200" class="gauge-svg">
+                            <circle cx="100" cy="100" r="85" class="gauge-bg" />
+                            <circle cx="100" cy="100" r="85" class="gauge-fill" id="gauge-fill" stroke-dasharray="534"
+                                stroke-dashoffset="534" />
+                        </svg>
+                        <div class="score-value" id="score-value">0%</div>
+                    </div>
+                    <div class="score-info">
+                        <h2 id="risk-level">—</h2>
+                        <p id="vendor-info">—</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="card stat-card stat-passed">
+                        <div class="stat-number" id="stat-passed">0</div>
+                        <div class="stat-label">Passed</div>
+                    </div>
+                    <div class="card stat-card stat-warned">
+                        <div class="stat-number" id="stat-warned">0</div>
+                        <div class="stat-label">Warnings</div>
+                    </div>
+                    <div class="card stat-card stat-failed">
+                        <div class="stat-number" id="stat-failed">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="card stat-card stat-total">
+                        <div class="stat-number" id="stat-total">0</div>
+                        <div class="stat-label">Total Rules</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Per-Standard Breakdown -->
+            <div class="card" id="standards-breakdown">
+                <div class="card-header">
+                    <h2>📊 Per-Standard Breakdown</h2>
+                </div>
+                <div class="standards-results" id="standards-results"></div>
+            </div>
+
+            <!-- Severity Distribution -->
+            <div class="card" id="severity-card">
+                <div class="card-header">
+                    <h2>⚠️ Severity Distribution</h2>
+                </div>
+                <div class="severity-bars" id="severity-bars"></div>
+            </div>
+
+            <!-- Rules Detail Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>📋 Rule Evaluation Details</h2>
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="PASS">✅ Pass</button>
+                        <button class="filter-btn" data-filter="FAIL">❌ Fail</button>
+                        <button class="filter-btn" data-filter="WARNING">⚠️ Warn</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="rules-table" id="rules-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Rule ID</th>
+                                <th>Title</th>
+                                <th>Standard</th>
+                                <th>Severity</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rules-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New Evaluation Button -->
+            <button id="new-eval-btn" class="btn-secondary" onclick="resetUI()">
+                🔄 New Evaluation
+            </button>
+        </section>
+
+        <!-- Error Section -->
+        <section id="error-section" class="card hidden">
+            <div class="error-content">
+                <div class="error-icon">❌</div>
+                <h2>Evaluation Error</h2>
+                <p id="error-message"></p>
+                <button class="btn-secondary" onclick="resetUI()">Try Again</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>SmartISMS v1.0 — Intelligent Information Security Management System</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
